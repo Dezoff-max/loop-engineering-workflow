@@ -1,5 +1,10 @@
 # Loop Engineering Workflow
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Codex Skill](https://img.shields.io/badge/Codex-skill-111827.svg)](SKILL.md)
+[![Workflow](https://img.shields.io/badge/workflow-loop%20engineering-blue.svg)](README.md)
+[![GitHub](https://img.shields.io/badge/GitHub-public-brightgreen.svg)](https://github.com/Dezoff-max/loop-engineering-workflow)
+
 Loop Engineering Workflow is a Codex skill for running a small, safe, verified development loop inside an existing project.
 
 It helps Codex inspect a repository, maintain lightweight project planning files, choose one practical next task, implement the smallest useful change, verify it, and record progress.
@@ -33,20 +38,33 @@ flowchart LR
 +-- agents/
 |   +-- openai.yaml
 +-- CHANGELOG.md
++-- install.sh
 +-- LICENSE
 +-- README.md
 ```
 
 ## Installation
 
-Clone this repository into your Codex skills directory:
+Install with the included script:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Dezoff-max/loop-engineering-workflow/main/install.sh | bash
+```
+
+Or clone this repository manually into your Codex skills directory:
 
 ```bash
 mkdir -p ~/.codex/skills
 git clone https://github.com/Dezoff-max/loop-engineering-workflow.git ~/.codex/skills/loop
 ```
 
-If you already have a local `loop` skill, back it up or remove it before cloning this repository.
+You can install into a custom location with:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Dezoff-max/loop-engineering-workflow/main/install.sh | INSTALL_DIR="$HOME/.codex/skills/loop-dev" bash
+```
+
+If `~/.codex/skills/loop` already exists and is not this repository, the installer stops without changing it.
 
 ## Usage
 
@@ -60,6 +78,20 @@ You can also ask for it naturally:
 
 ```text
 Loop: continue this project from the roadmap.
+```
+
+More examples:
+
+```text
+$loop analyze this repository and run the first safe task.
+```
+
+```text
+Use Loop Engineering to continue from roadmap.md and progress.md.
+```
+
+```text
+Loop: set up the project planning files, verify the app, and report the next task.
 ```
 
 ## Generated Project Files
