@@ -115,6 +115,10 @@ The skill maintains these files in the target project:
 - Do not publish, deploy, or expose anything publicly without explicit approval.
 - Do not mark a task complete unless verification passed or the task was documentation-only and manually reviewed.
 
+## Contributing
+
+Forks, issues, and pull requests are welcome. If you adapt Loop Engineering Workflow for your own Codex setup, feel free to share improvements that keep the skill small, safe, and easy to verify.
+
 ## Compatibility
 
 This skill is designed for the Codex skill layout:
