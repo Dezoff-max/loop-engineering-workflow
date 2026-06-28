@@ -9,3 +9,12 @@ Append-only history. Do not erase previous entries.
 - Checks run:
 - Result:
 - Next step:
+- Handoff:
+
+## Handoff
+
+- Current state:
+- Next recommended task:
+- Known blockers:
+- Commands that passed:
+- Commands that failed:

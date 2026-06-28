@@ -15,6 +15,7 @@
 
 ## Manual Checklist
 
+- `$loop doctor` reports no blocking Loop-state failures, or failures are documented.
 - Relevant files were inspected before editing.
 - The smallest useful change was made.
 - Existing user work was preserved.

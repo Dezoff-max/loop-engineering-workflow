@@ -13,10 +13,10 @@ It helps Codex inspect a repository, maintain lightweight project planning files
 
 - Analyzes the current project structure before editing.
 - Creates or updates `AGENTS.md`, `project-analysis.md`, `roadmap.md`, `progress.md`, `loop.md`, and `verification.md` using stable templates.
-- Supports `setup`, `continue`, `audit-only`, `repair`, and `matrix` modes.
-- Selects exactly one small, safe task from the roadmap.
+- Supports `setup`, `continue`, `audit-only`, `repair`, `matrix`, and `doctor` modes.
+- Selects exactly one small, safe task from the roadmap using impact, risk, effort, and confidence scoring.
 - Runs the best available verification for the project using a stack-aware verification matrix.
-- Records what changed, which checks ran, and what should happen next.
+- Records what changed, which checks ran, what should happen next, and a handoff note for the next loop.
 - Uses English by default, unless the user asks for another language.
 
 ## Workflow
@@ -42,6 +42,8 @@ flowchart LR
 +-- install.sh
 +-- LICENSE
 +-- README.md
++-- scripts/
+|   +-- check.sh
 +-- templates/
 |   +-- AGENTS.md
 |   +-- loop.md
@@ -63,7 +65,7 @@ Or clone this repository manually into your Codex skills directory:
 
 ```bash
 mkdir -p ~/.codex/skills
-git clone https://github.com/Dezoff-max/loop-engineering-workflow.git ~/.codex/skills/loop
+git clone https://github.com/Dezoff-max/loop-engineering-workflow.git ~/.codex/skills/loop-engineering-workflow
 ```
 
 You can install into a custom location with:
@@ -72,7 +74,9 @@ You can install into a custom location with:
 curl -fsSL https://raw.githubusercontent.com/Dezoff-max/loop-engineering-workflow/main/install.sh | INSTALL_DIR="$HOME/.codex/skills/loop-dev" bash
 ```
 
-If `~/.codex/skills/loop` already exists and is not this repository, the installer stops without changing it.
+If the target install directory already exists and is not this repository, the installer stops without changing it.
+
+If the legacy path `~/.codex/skills/loop` exists and the default path does not, the installer stops to avoid duplicate skills with the same `name: loop`. If both paths already exist, the installer warns so you can keep only one active copy.
 
 ## Usage
 
@@ -122,6 +126,10 @@ Loop repair: clean up stale Loop docs and verification instructions without chan
 Loop matrix: build or refresh the project's verification matrix without changing app code.
 ```
 
+```text
+Loop doctor: check whether the Loop files are healthy and ready to continue.
+```
+
 ## Operating Modes
 
 | Mode | Purpose |
@@ -131,6 +139,7 @@ Loop matrix: build or refresh the project's verification matrix without changing
 | `audit-only` | Inspect the project and Loop files, then report findings without editing files. |
 | `repair` | Fix missing, stale, or inconsistent Loop documentation without changing application code unless explicitly requested. |
 | `matrix` | Build or refresh `verification.md` with stack-specific commands, manual checks, success signals, and fallbacks without changing application code. |
+| `doctor` | Run a read-only health check for Loop files, stale commands, weak task definitions, missing scoring, and done tasks without evidence. |
 
 ## Generated Project Files
 
@@ -145,6 +154,22 @@ The skill maintains these files in the target project:
 | `loop.md` | The operating procedure for future loop runs. |
 | `verification.md` | Commands and manual checks that define done. |
 
+## Task Scoring
+
+Roadmap tasks include:
+
+- `Impact`
+- `Risk`
+- `Effort`
+- `Confidence`
+- `Score`
+
+Loop uses these fields to choose the highest-value safe task that can fit in one verified loop.
+
+## Handoff
+
+`progress.md` includes a handoff section with the current state, next recommended task, known blockers, and commands that passed or failed. This helps the next Loop run continue without rediscovering the same context.
+
 ## Templates
 
 The `templates/` directory provides stable starting structures for generated Loop files. Codex should use these templates as a baseline, then adapt them to the current project instead of copying generic placeholders blindly.
@@ -158,6 +183,22 @@ Loop chooses the narrowest check that proves the selected task. In `matrix` mode
 - Swift, iOS, and macOS projects.
 - Static HTML, CSS, and vanilla JavaScript projects.
 - Documentation-only and knowledge projects.
+
+## Doctor Mode
+
+`doctor` mode is read-only. It reports Loop health as `pass`, `warn`, or `fail`, then recommends the next mode: `repair`, `matrix`, `continue`, or `setup`.
+
+It checks required files, placeholder content, roadmap scoring, progress evidence, stale verification commands, and unsafe instructions.
+
+## Self-test
+
+Run the skill self-test with:
+
+```bash
+scripts/check.sh
+```
+
+It validates the skill frontmatter, required templates, documented modes, shell syntax, roadmap scoring fields, handoff block, verification matrix, and trailing whitespace.
 
 ## Safety Principles
 
@@ -176,9 +217,9 @@ Forks, issues, and pull requests are welcome. If you adapt Loop Engineering Work
 This skill is designed for the Codex skill layout:
 
 ```text
-~/.codex/skills/loop/SKILL.md
-~/.codex/skills/loop/agents/openai.yaml
-~/.codex/skills/loop/templates/*.md
+~/.codex/skills/loop-engineering-workflow/SKILL.md
+~/.codex/skills/loop-engineering-workflow/agents/openai.yaml
+~/.codex/skills/loop-engineering-workflow/templates/*.md
 ```
 
 It is project-agnostic and can be used with web apps, macOS apps, static prototypes, documentation projects, and other repositories where incremental verified work is useful.

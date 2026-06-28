@@ -2,7 +2,9 @@
 set -euo pipefail
 
 REPO_URL="${REPO_URL:-https://github.com/Dezoff-max/loop-engineering-workflow.git}"
-INSTALL_DIR="${INSTALL_DIR:-$HOME/.codex/skills/loop}"
+DEFAULT_INSTALL_DIR="$HOME/.codex/skills/loop-engineering-workflow"
+LEGACY_INSTALL_DIR="$HOME/.codex/skills/loop"
+INSTALL_DIR="${INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
 
 info() {
   printf '%s\n' "$1"
@@ -17,6 +19,13 @@ command -v git >/dev/null 2>&1 || fail "git is required to install Loop Engineer
 
 parent_dir="$(dirname "$INSTALL_DIR")"
 mkdir -p "$parent_dir"
+
+if [ "$INSTALL_DIR" = "$DEFAULT_INSTALL_DIR" ] && [ -e "$LEGACY_INSTALL_DIR" ]; then
+  if [ ! -e "$DEFAULT_INSTALL_DIR" ]; then
+    fail "$LEGACY_INSTALL_DIR already exists. Move it to $DEFAULT_INSTALL_DIR or set INSTALL_DIR to avoid duplicate loop skills."
+  fi
+  info "Warning: legacy install path also exists at $LEGACY_INSTALL_DIR. Remove it or keep only one loop skill to avoid duplicate skill names."
+fi
 
 if [ -e "$INSTALL_DIR" ]; then
   if [ ! -d "$INSTALL_DIR/.git" ]; then

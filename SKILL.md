@@ -1,6 +1,6 @@
 ---
 name: loop
-description: Loop Engineering workflow for Codex. Use when the user invokes $loop, says "Loop", "Loop Engineering", asks to set up an autonomous project cycle, continue work from roadmap/progress, run audit-only, repair, or matrix mode, or wants Codex to analyze a repository, create/update project-analysis.md, AGENTS.md, roadmap.md, progress.md, loop.md, verification.md from templates, execute one small safe task, verify it, and report the result.
+description: Loop Engineering workflow for Codex. Use when the user invokes $loop, says "Loop", "Loop Engineering", asks to set up an autonomous project cycle, continue work from roadmap/progress, run audit-only, repair, matrix, or doctor mode, or wants Codex to analyze a repository, create/update project-analysis.md, AGENTS.md, roadmap.md, progress.md, loop.md, verification.md from templates, execute one small safe task, verify it, and report the result.
 ---
 
 # Loop
@@ -26,8 +26,9 @@ Pick exactly one mode from the user's request. If the mode is not explicit, infe
 - `audit-only`: inspect the project and Loop files, report findings and recommended next work, but do not edit files.
 - `repair`: inspect existing Loop files, fix missing sections, stale commands, oversized tasks, or inconsistent progress records, then verify the documentation. Do not change application code unless explicitly requested.
 - `matrix`: inspect the project stack and commands, then create or update the verification matrix in `verification.md`. Do not change application code or implement roadmap tasks unless explicitly requested.
+- `doctor`: inspect Loop state and report health problems, stale commands, missing files, weak task definitions, or done tasks without evidence. Do not edit files.
 
-Default to `setup` when Loop files are missing. Default to `continue` when `roadmap.md` and `progress.md` already exist. Use `audit-only` when the user asks to inspect, review, or diagnose without making changes. Use `matrix` when the user asks for verification strategy, a check matrix, or project-specific validation instructions.
+Default to `setup` when Loop files are missing. Default to `continue` when `roadmap.md` and `progress.md` already exist. Use `audit-only` when the user asks to inspect, review, or diagnose without making changes. Use `matrix` when the user asks for verification strategy, a check matrix, or project-specific validation instructions. Use `doctor` when the user asks whether the Loop setup is healthy, stale, broken, inconsistent, or ready to continue.
 
 ## Start Or Continue
 
@@ -47,6 +48,7 @@ Default to `setup` when Loop files are missing. Default to `continue` when `road
 5. Execute one loop only unless the user explicitly asks for multiple loops or ongoing autonomous work.
 6. In `audit-only`, stop after the report. Do not create files, edit files, install dependencies, or run commands that change project state.
 7. In `matrix`, update only `verification.md` and directly related discovered-command notes. Do not select or implement a roadmap task.
+8. In `doctor`, stop after the health report. Do not create files, edit files, install dependencies, or run commands that change project state.
 
 ## Template Use
 
@@ -107,9 +109,25 @@ Use this task format:
   Definition of done:
   Verification:
   Priority: high/medium/low
+  Impact: high/medium/low
+  Risk: low/medium/high
+  Effort: small/medium/large
+  Confidence: high/medium/low
+  Score:
 ```
 
 Create practical tasks that are small, checkable, and useful. Prefer 5-12 tasks for the initial roadmap.
+
+### Task Scoring
+
+Use scoring to choose the next task when more than one safe task is available:
+- Impact: prefer high user or project value.
+- Risk: prefer low blast radius and reversible changes.
+- Effort: prefer small tasks that can complete in one loop.
+- Confidence: prefer tasks with clear files, commands, and definition of done.
+- Score: optional short summary such as `high impact / low risk / small`.
+
+Pick the best-scored high-priority task. If scores are missing, infer them before selecting a task and update `roadmap.md` when editing is allowed.
 
 ### `progress.md`
 
@@ -122,22 +140,26 @@ Each entry should include:
 - files touched;
 - checks run;
 - result;
-- next step.
+- next step;
+- handoff note.
 
 ### `loop.md`
 
 Describe the operating loop:
 
 1. Read `AGENTS.md`.
-2. Read `roadmap.md`.
-3. Read `progress.md`.
-4. Pick the first unfinished high-priority safe task.
-5. Implement the smallest useful change.
-6. Run verification.
-7. Fix failures if they are in scope.
-8. Update `progress.md`.
-9. Mark the task done only if verification passes or the task is documentation-only and manually reviewed.
-10. Report the result and next task.
+2. Read `project-analysis.md`.
+3. Read `roadmap.md`.
+4. Read `progress.md`.
+5. Read `verification.md`.
+6. Score unfinished tasks by impact, risk, effort, and confidence.
+7. Pick the best-scored high-priority safe task.
+8. Implement the smallest useful change.
+9. Run the narrowest verification that proves the task.
+10. Fix failures if they are in scope.
+11. Update `progress.md` with a handoff note.
+12. Mark the task done only if verification passes or the task is documentation-only and manually reviewed.
+13. Report the result and next task.
 
 ### `verification.md`
 
@@ -158,6 +180,21 @@ Detect package manager from lockfiles:
 - `bun.lockb` or `bun.lock` -> `bun`
 
 Do not run dependency installation automatically unless dependencies are missing or the task requires it. Prefer existing lockfiles and existing scripts.
+
+## Doctor Checks
+
+In `doctor` mode, inspect and report:
+- required Loop files: present, readable, and not only generic placeholders;
+- `AGENTS.md`: project-specific rules exist and do not conflict with nested instructions;
+- `project-analysis.md`: stack, commands, risks, and recommended work are current enough;
+- `roadmap.md`: tasks are small, checkable, prioritized, and include scoring fields;
+- completed roadmap items: each done item has matching progress evidence and verification;
+- `progress.md`: latest entry includes checks, result, next step, and handoff;
+- `verification.md`: package manager detection, commands, manual checks, and matrix match the current repo;
+- stale commands: scripts referenced in docs still exist in project config;
+- safety: no instruction asks to expose secrets, delete important files, deploy, or publish without approval.
+
+Report each item as `pass`, `warn`, or `fail`, then recommend one next mode: `repair`, `matrix`, `continue`, or `setup`.
 
 ## Verification Matrix
 

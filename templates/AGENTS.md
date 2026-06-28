@@ -43,4 +43,5 @@ After each completed loop, append to `progress.md`:
 - files touched;
 - checks run;
 - result;
-- next step.
+- next step;
+- handoff note.

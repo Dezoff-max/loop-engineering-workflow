@@ -5,10 +5,11 @@
 3. Read `roadmap.md`.
 4. Read `progress.md`.
 5. Read `verification.md`.
-6. Pick the first unfinished high-priority safe task.
-7. Implement the smallest useful change.
-8. Run the narrowest verification that proves the task.
-9. Fix failures if they are in scope.
-10. Update `progress.md`.
-11. Mark the task done only if verification passed, or if the task is documentation-only and manually reviewed.
-12. Report the result and next task.
+6. Score unfinished tasks by impact, risk, effort, and confidence.
+7. Pick the best-scored high-priority safe task.
+8. Implement the smallest useful change.
+9. Run the narrowest verification that proves the task.
+10. Fix failures if they are in scope.
+11. Update `progress.md` with a handoff note.
+12. Mark the task done only if verification passed, or if the task is documentation-only and manually reviewed.
+13. Report the result and next task.
