@@ -2,7 +2,7 @@
 
 All notable changes to Loop Engineering Workflow will be documented in this file.
 
-## Unreleased
+## 0.2.0 - 2026-06-28
 
 - Added `templates/` for generated Loop project files.
 - Added explicit `setup`, `continue`, `audit-only`, `repair`, `matrix`, and `doctor` operating modes.
