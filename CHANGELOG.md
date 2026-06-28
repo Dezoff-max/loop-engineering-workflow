@@ -2,6 +2,13 @@
 
 All notable changes to Loop Engineering Workflow will be documented in this file.
 
+## Unreleased
+
+- Added `templates/` for generated Loop project files.
+- Added explicit `setup`, `continue`, `audit-only`, `repair`, and `matrix` operating modes.
+- Added a stack-aware verification matrix for Node, Python, Swift/macOS, static HTML, and documentation-only projects.
+- Updated README usage examples and repository structure for the new modes and templates.
+
 ## 0.1.1 - 2026-06-25
 
 - Added README badges.

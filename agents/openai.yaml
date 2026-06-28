@@ -1,4 +1,4 @@
 interface:
   display_name: "Loop"
-  short_description: "Loop Engineering workflow"
-  default_prompt: "Use $loop to set up or continue a small verified development loop for this project."
+  short_description: "Template-backed Loop Engineering workflow"
+  default_prompt: "Use $loop to set up, continue, audit, repair, or build a verification matrix for this project."
