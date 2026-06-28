@@ -247,6 +247,40 @@ Prefer:
 - consistency check across README, project docs, roadmap, and progress;
 - manual review of changed sections.
 
+## Mode Report Templates
+
+For `doctor`, use:
+
+```md
+## Loop Doctor Report
+
+Status:
+
+| Check | Result | Evidence | Recommendation |
+| --- | --- | --- | --- |
+| Required files | pass/warn/fail |  |  |
+| Project rules | pass/warn/fail |  |  |
+| Project analysis | pass/warn/fail |  |  |
+| Roadmap quality | pass/warn/fail |  |  |
+| Progress evidence | pass/warn/fail |  |  |
+| Verification matrix | pass/warn/fail |  |  |
+| Safety | pass/warn/fail |  |  |
+
+Next mode:
+```
+
+For `matrix`, use:
+
+```md
+## Verification Matrix
+
+| Area | Command or check | When to run | Success signal | Fallback |
+| --- | --- | --- | --- | --- |
+|  |  |  |  |  |
+```
+
+For normal loop work, use the final report format below.
+
 ## First Loop
 
 After setting up or updating the Loop files:

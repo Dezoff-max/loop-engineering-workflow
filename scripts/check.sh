@@ -10,10 +10,12 @@ fail() {
 }
 
 required_files=(
+  "AGENTS.md"
   "SKILL.md"
   "README.md"
   "CHANGELOG.md"
   "install.sh"
+  "verification.md"
   "agents/openai.yaml"
   "templates/AGENTS.md"
   "templates/project-analysis.md"
@@ -42,6 +44,12 @@ done
 
 grep -q '^## Handoff$' templates/progress.md || fail "progress template missing handoff block"
 grep -q 'Verification Matrix' templates/verification.md || fail "verification template missing matrix"
+grep -q 'Loop Doctor Report' SKILL.md || fail "SKILL.md missing doctor report template"
+grep -q 'Command or check' SKILL.md || fail "SKILL.md missing matrix report template"
+grep -q 'loop-engineering-workflow' install.sh || fail "install.sh missing canonical install path"
+grep -q 'loop-engineering-workflow' README.md || fail "README.md missing canonical install path"
+grep -q 'scripts/check.sh' AGENTS.md || fail "AGENTS.md missing self-test command"
+grep -q 'scripts/check.sh' verification.md || fail "verification.md missing self-test command"
 
 bash -n install.sh
 bash -n scripts/check.sh

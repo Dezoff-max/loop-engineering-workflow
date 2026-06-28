@@ -35,6 +35,7 @@ flowchart LR
 
 ```text
 .
++-- AGENTS.md
 +-- SKILL.md
 +-- agents/
 |   +-- openai.yaml
@@ -51,6 +52,7 @@ flowchart LR
 |   +-- project-analysis.md
 |   +-- roadmap.md
 |   +-- verification.md
++-- verification.md
 ```
 
 ## Installation
@@ -190,6 +192,12 @@ Loop chooses the narrowest check that proves the selected task. In `matrix` mode
 
 It checks required files, placeholder content, roadmap scoring, progress evidence, stale verification commands, and unsafe instructions.
 
+## Report Formats
+
+`doctor` reports use a health table with `Check`, `Result`, `Evidence`, and `Recommendation`.
+
+`matrix` reports use a verification table with `Area`, `Command or check`, `When to run`, `Success signal`, and `Fallback`.
+
 ## Self-test
 
 Run the skill self-test with:
@@ -199,6 +207,10 @@ scripts/check.sh
 ```
 
 It validates the skill frontmatter, required templates, documented modes, shell syntax, roadmap scoring fields, handoff block, verification matrix, and trailing whitespace.
+
+## Maintainer Notes
+
+Repository-specific maintenance rules live in `AGENTS.md`. Verification expectations for this skill repository live in `verification.md`.
 
 ## Safety Principles
 
