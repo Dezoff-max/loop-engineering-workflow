@@ -40,6 +40,10 @@ flowchart LR
 +-- agents/
 |   +-- openai.yaml
 +-- CHANGELOG.md
++-- examples/
+|   +-- doctor-report.md
+|   +-- prompts.md
+|   +-- verification-matrix.md
 +-- install.sh
 +-- LICENSE
 +-- README.md
@@ -197,6 +201,8 @@ It checks required files, placeholder content, roadmap scoring, progress evidenc
 `doctor` reports use a health table with `Check`, `Result`, `Evidence`, and `Recommendation`.
 
 `matrix` reports use a verification table with `Area`, `Command or check`, `When to run`, `Success signal`, and `Fallback`.
+
+Examples live in `examples/`.
 
 ## Self-test
 

@@ -17,6 +17,9 @@ required_files=(
   "install.sh"
   "verification.md"
   "agents/openai.yaml"
+  "examples/prompts.md"
+  "examples/doctor-report.md"
+  "examples/verification-matrix.md"
   "templates/AGENTS.md"
   "templates/project-analysis.md"
   "templates/roadmap.md"
@@ -36,6 +39,7 @@ grep -q '^description: ' SKILL.md || fail "SKILL.md frontmatter must include des
 for mode in setup continue audit-only repair matrix doctor; do
   grep -q "\`$mode\`" SKILL.md || fail "SKILL.md missing mode: $mode"
   grep -q "\`$mode\`" README.md || fail "README.md missing mode: $mode"
+  grep -q "\$loop $mode" examples/prompts.md || fail "prompt examples missing mode: $mode"
 done
 
 for field in Impact Risk Effort Confidence Score; do
@@ -46,6 +50,8 @@ grep -q '^## Handoff$' templates/progress.md || fail "progress template missing 
 grep -q 'Verification Matrix' templates/verification.md || fail "verification template missing matrix"
 grep -q 'Loop Doctor Report' SKILL.md || fail "SKILL.md missing doctor report template"
 grep -q 'Command or check' SKILL.md || fail "SKILL.md missing matrix report template"
+grep -q 'Loop Doctor Report' examples/doctor-report.md || fail "doctor example missing report heading"
+grep -q 'Verification Matrix' examples/verification-matrix.md || fail "matrix example missing report heading"
 grep -q 'loop-engineering-workflow' install.sh || fail "install.sh missing canonical install path"
 grep -q 'loop-engineering-workflow' README.md || fail "README.md missing canonical install path"
 grep -q 'scripts/check.sh' AGENTS.md || fail "AGENTS.md missing self-test command"

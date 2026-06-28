@@ -8,9 +8,10 @@ This repository contains the `loop` Codex skill. Keep the skill small, safe, det
 
 1. Read `SKILL.md`.
 2. Read `templates/*.md`.
-3. Read `README.md`.
-4. Read `verification.md`.
-5. Inspect `scripts/check.sh` before changing validation behavior.
+3. Read `examples/*.md`.
+4. Read `README.md`.
+5. Read `verification.md`.
+6. Inspect `scripts/check.sh` before changing validation behavior.
 
 ## Editing Rules
 

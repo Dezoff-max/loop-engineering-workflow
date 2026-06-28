@@ -10,6 +10,7 @@ All notable changes to Loop Engineering Workflow will be documented in this file
 - Added impact, risk, effort, confidence, and score fields to roadmap tasks.
 - Added handoff guidance to progress updates.
 - Added fixed report formats for `doctor` and `matrix` mode output.
+- Added examples for prompts, doctor reports, and verification matrices.
 - Added `scripts/check.sh` as a self-test for skill structure and docs.
 - Added repository-level `AGENTS.md` and `verification.md` for maintaining the skill itself.
 - Changed the default install path to `~/.codex/skills/loop-engineering-workflow` and added a duplicate-skill guard for the legacy `loop` path.
