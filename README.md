@@ -7,16 +7,17 @@
 
 Loop Engineering Workflow is a Codex skill for running a small, safe, verified development loop inside an existing project.
 
-It helps Codex inspect a repository, maintain lightweight project planning files, choose one practical next task, implement the smallest useful change, verify it, and record progress.
+It helps Codex inspect a repository, maintain lightweight project planning files, negotiate a task contract, choose one practical next task, implement the smallest useful change, verify it, trace failures, and record progress.
 
 ## What It Does
 
 - Analyzes the current project structure before editing.
-- Creates or updates `AGENTS.md`, `project-analysis.md`, `roadmap.md`, `progress.md`, `loop.md`, and `verification.md` using stable templates.
+- Creates or updates `AGENTS.md`, `project-analysis.md`, `contract.md`, `roadmap.md`, `progress.md`, `trace.md`, `loop.md`, and `verification.md` using stable templates.
 - Supports `setup`, `continue`, `audit-only`, `repair`, `matrix`, and `doctor` modes.
+- Separates planner, builder, and evaluator responsibilities through an explicit task contract.
 - Selects exactly one small, safe task from the roadmap using impact, risk, effort, and confidence scoring.
 - Runs the best available verification for the project using a stack-aware verification matrix.
-- Records what changed, which checks ran, what should happen next, and a handoff note for the next loop.
+- Records what changed, which checks ran, what should happen next, the current bottleneck, trace evidence, and a handoff note for the next loop.
 - Uses English by default, unless the user asks for another language.
 
 ## Workflow
@@ -24,11 +25,13 @@ It helps Codex inspect a repository, maintain lightweight project planning files
 ```mermaid
 flowchart LR
   A["Inspect project"] --> B["Update Loop docs"]
-  B --> C["Pick one safe task"]
-  C --> D["Implement minimal change"]
-  D --> E["Verify"]
-  E --> F["Record progress"]
-  F --> G["Report next step"]
+  B --> C["Negotiate contract"]
+  C --> D["Pick one safe task"]
+  D --> E["Implement minimal change"]
+  E --> F["Verify"]
+  F --> G["Trace or restart"]
+  G --> H["Record progress"]
+  H --> I["Report next step"]
 ```
 
 ## Repository Structure
@@ -41,8 +44,10 @@ flowchart LR
 |   +-- openai.yaml
 +-- CHANGELOG.md
 +-- examples/
+|   +-- contract.md
 |   +-- doctor-report.md
 |   +-- prompts.md
+|   +-- trace.md
 |   +-- verification-matrix.md
 +-- install.sh
 +-- LICENSE
@@ -51,10 +56,12 @@ flowchart LR
 |   +-- check.sh
 +-- templates/
 |   +-- AGENTS.md
+|   +-- contract.md
 |   +-- loop.md
 |   +-- progress.md
 |   +-- project-analysis.md
 |   +-- roadmap.md
+|   +-- trace.md
 |   +-- verification.md
 +-- verification.md
 ```
@@ -155,10 +162,22 @@ The skill maintains these files in the target project:
 | --- | --- |
 | `AGENTS.md` | Project-specific rules for Codex. |
 | `project-analysis.md` | Current structure, stack, commands, risks, and recommended work. |
+| `contract.md` | The current task contract: scope, done criteria, checks, and restart signals. |
 | `roadmap.md` | Small, checkable tasks with clear success criteria. |
-| `progress.md` | Append-only history of completed loop work. |
+| `progress.md` | Append-only history of completed loop work, bottlenecks, and handoff notes. |
+| `trace.md` | Append-only trace of failures, restarts, and judgment divergences. |
 | `loop.md` | The operating procedure for future loop runs. |
 | `verification.md` | Commands and manual checks that define done. |
+
+## Contract
+
+`contract.md` separates the roles in the loop:
+
+- Planner defines why the task matters and what done means.
+- Builder works only inside the allowed scope.
+- Evaluator checks the result against the contract and verification matrix.
+
+Implementation should not start until the contract is concrete enough to evaluate.
 
 ## Task Scoring
 
@@ -174,7 +193,15 @@ Loop uses these fields to choose the highest-value safe task that can fit in one
 
 ## Handoff
 
-`progress.md` includes a handoff section with the current state, next recommended task, known blockers, and commands that passed or failed. This helps the next Loop run continue without rediscovering the same context.
+`progress.md` includes a handoff section with the current state, next recommended task, known blockers, commands that passed or failed, and current bottleneck. This helps the next Loop run continue without rediscovering the same context.
+
+## Trace And Restart
+
+`trace.md` records failures, restarts, and judgment divergences. If verification repeats the same failure, the contract is wrong, or the task grows beyond one safe loop, Loop should stop patching, write a trace entry, shrink the contract, and restart from the smaller task.
+
+## Bottlenecks
+
+Each progress entry should name the current bottleneck: planning, contract, implementation, verification, documentation, architecture, UX, release, or harness.
 
 ## Templates
 
@@ -194,7 +221,7 @@ Loop chooses the narrowest check that proves the selected task. In `matrix` mode
 
 `doctor` mode is read-only. It reports Loop health as `pass`, `warn`, or `fail`, then recommends the next mode: `repair`, `matrix`, `continue`, or `setup`.
 
-It checks required files, placeholder content, roadmap scoring, progress evidence, stale verification commands, and unsafe instructions.
+It checks required files, placeholder content, contract quality, roadmap scoring, progress evidence, trace quality, stale verification commands, stale harness, and unsafe instructions.
 
 ## Report Formats
 
@@ -212,7 +239,7 @@ Run the skill self-test with:
 scripts/check.sh
 ```
 
-It validates the skill frontmatter, required templates, documented modes, shell syntax, roadmap scoring fields, handoff block, verification matrix, and trailing whitespace.
+It validates the skill frontmatter, required templates, documented modes, shell syntax, roadmap scoring fields, handoff block, bottleneck fields, contract/trace templates, verification matrix, and trailing whitespace.
 
 ## Maintainer Notes
 

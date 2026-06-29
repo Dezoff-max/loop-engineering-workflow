@@ -16,16 +16,19 @@
 ## Manual Checklist
 
 - `$loop doctor` reports no blocking Loop-state failures, or failures are documented.
+- `contract.md` defines done criteria and allowed files before implementation.
 - Relevant files were inspected before editing.
 - The smallest useful change was made.
 - Existing user work was preserved.
 - No secrets were copied or logged.
 - Documentation was updated when behavior changed.
 - `progress.md` was updated after verification.
+- `trace.md` was updated when verification failed or the loop restarted.
 
 ## Success Criteria
 
 - The selected task's definition of done is met.
+- The selected task's contract is satisfied.
 - The relevant verification command or manual check passes.
 - Any known failures are documented clearly.
 

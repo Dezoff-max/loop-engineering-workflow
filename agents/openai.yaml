@@ -1,4 +1,4 @@
 interface:
   display_name: "Loop"
   short_description: "Template-backed verified project loop"
-  default_prompt: "Use $loop to set up, continue, audit, repair, build a verification matrix, or run a doctor check for this project."
+  default_prompt: "Use $loop to set up, continue, audit, repair, build a verification matrix, run a doctor check, or restart from a contract and trace."

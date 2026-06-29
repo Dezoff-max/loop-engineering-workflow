@@ -18,6 +18,14 @@ $loop continue
 
 Expected behavior: read existing Loop files, score unfinished roadmap tasks, implement one safe task, verify it, update progress, and report the next task.
 
+## Contract
+
+```text
+$loop continue after refreshing contract.md for the selected task.
+```
+
+Expected behavior: write or update `contract.md` before implementation, then build and verify against that contract.
+
 ## Audit-only
 
 ```text
@@ -49,3 +57,11 @@ $loop doctor
 ```
 
 Expected behavior: run a read-only Loop health check and recommend the next mode.
+
+## Restart
+
+```text
+Loop: restart from the trace and shrink the current contract.
+```
+
+Expected behavior: read `trace.md`, identify the divergence point, shrink `contract.md`, and continue only if the new task is safe.

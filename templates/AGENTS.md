@@ -4,10 +4,12 @@
 
 1. Read this file first.
 2. Read `project-analysis.md`.
-3. Read `roadmap.md`.
-4. Read `progress.md`.
-5. Read `verification.md`.
-6. Inspect the relevant source files before editing.
+3. Read `contract.md`.
+4. Read `roadmap.md`.
+5. Read `progress.md`.
+6. Read `trace.md`.
+7. Read `verification.md`.
+8. Inspect the relevant source files before editing.
 
 Follow the closest nested `AGENTS.md` when one exists.
 
@@ -32,6 +34,7 @@ Follow the closest nested `AGENTS.md` when one exists.
 - Run the narrowest check that proves the task.
 - Prefer existing project scripts and documented commands.
 - Do not mark a task complete when verification fails or was not run.
+- If verification repeats the same failure, update `trace.md` and restart from a smaller contract.
 - For documentation-only changes, manually review links, headings, and consistency.
 
 ## Progress Updates
@@ -44,4 +47,5 @@ After each completed loop, append to `progress.md`:
 - checks run;
 - result;
 - next step;
+- bottleneck;
 - handoff note.

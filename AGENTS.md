@@ -18,6 +18,7 @@ This repository contains the `loop` Codex skill. Keep the skill small, safe, det
 - Preserve the public skill name: `name: loop`.
 - Keep operating modes explicit and documented in both `SKILL.md` and `README.md`.
 - Keep every generated-file template in `templates/`.
+- Keep contract, trace, bottleneck, and restart instructions synchronized across `SKILL.md`, templates, examples, and `scripts/check.sh`.
 - Do not add runtime dependencies for the skill unless there is a strong reason.
 - Prefer instructions and templates over complex code.
 - Do not remove safety rules that protect user work, secrets, or publishing/deployment boundaries.

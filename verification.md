@@ -12,6 +12,7 @@
 - Every operating mode appears in both `SKILL.md` and `README.md`.
 - Every mode has clear edit boundaries.
 - `templates/` includes all generated Loop files.
+- Contract, trace, bottleneck, and restart guidance is consistent across docs and templates.
 - `README.md` examples match the current modes.
 - `CHANGELOG.md` includes user-facing changes under `Unreleased`.
 - `install.sh` default path matches README compatibility docs.

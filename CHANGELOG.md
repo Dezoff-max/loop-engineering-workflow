@@ -2,6 +2,14 @@
 
 All notable changes to Loop Engineering Workflow will be documented in this file.
 
+## Unreleased
+
+- Added `contract.md` and `trace.md` templates for explicit task contracts and restart traces.
+- Added planner, builder, and evaluator role separation to the loop instructions.
+- Added restart policy, trace reading, bottleneck detection, and harness pruning guidance.
+- Added bottleneck tracking to progress updates and doctor checks.
+- Added contract and trace examples.
+
 ## 0.2.0 - 2026-06-28
 
 - Added `templates/` for generated Loop project files.

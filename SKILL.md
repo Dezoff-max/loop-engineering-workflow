@@ -1,6 +1,6 @@
 ---
 name: loop
-description: Loop Engineering workflow for Codex. Use when the user invokes $loop, says "Loop", "Loop Engineering", asks to set up an autonomous project cycle, continue work from roadmap/progress, run audit-only, repair, matrix, or doctor mode, or wants Codex to analyze a repository, create/update project-analysis.md, AGENTS.md, roadmap.md, progress.md, loop.md, verification.md from templates, execute one small safe task, verify it, and report the result.
+description: Loop Engineering workflow for Codex. Use when the user invokes $loop, says "Loop", "Loop Engineering", asks to set up an autonomous project cycle, continue work from roadmap/progress, run audit-only, repair, matrix, or doctor mode, or wants Codex to analyze a repository, create/update project-analysis.md, AGENTS.md, contract.md, roadmap.md, progress.md, trace.md, loop.md, verification.md from templates, execute one small safe task, verify it, and report the result.
 ---
 
 # Loop
@@ -16,6 +16,8 @@ plan -> task -> code/docs -> verification -> fix -> progress -> next task.
 - Do not delete important files, change the stack, add dependencies, deploy, publish, or run destructive commands without explicit approval.
 - Never mark a task done if verification failed or was not run.
 - If offering choices, phrase them as a short numbered question so the user can answer with a number.
+- Separate roles explicitly: planner defines the contract, builder makes the smallest change, evaluator checks the result against the contract.
+- Keep loop state on disk. A future run should be able to restart from `contract.md`, `roadmap.md`, `progress.md`, `trace.md`, and `verification.md`.
 
 ## Operating Modes
 
@@ -39,16 +41,19 @@ Default to `setup` when Loop files are missing. Default to `continue` when `road
 2. If Loop files already exist, read them before changing anything:
    - `AGENTS.md`
    - `project-analysis.md`
+   - `contract.md`
    - `roadmap.md`
    - `progress.md`
+   - `trace.md`
    - `loop.md`
    - `verification.md`
 3. If files are missing, create them from the closest matching file in `templates/`. If they exist, update them surgically and preserve useful existing content.
-4. In `setup`, `continue`, or `repair`, choose exactly one first/next task: the smallest safe high-priority item from `roadmap.md`. If no safe coding task is clear, choose a documentation or verification task.
-5. Execute one loop only unless the user explicitly asks for multiple loops or ongoing autonomous work.
-6. In `audit-only`, stop after the report. Do not create files, edit files, install dependencies, or run commands that change project state.
-7. In `matrix`, update only `verification.md` and directly related discovered-command notes. Do not select or implement a roadmap task.
-8. In `doctor`, stop after the health report. Do not create files, edit files, install dependencies, or run commands that change project state.
+4. Before coding, write or refresh `contract.md` for the selected task: done criteria, checks, allowed files, boundaries, and rollback/restart signals.
+5. In `setup`, `continue`, or `repair`, choose exactly one first/next task: the smallest safe high-priority item from `roadmap.md`. If no safe coding task is clear, choose a documentation or verification task.
+6. Execute one loop only unless the user explicitly asks for multiple loops or ongoing autonomous work.
+7. In `audit-only`, stop after the report. Do not create files, edit files, install dependencies, or run commands that change project state.
+8. In `matrix`, update only `verification.md` and directly related discovered-command notes. Do not select or implement a roadmap task.
+9. In `doctor`, stop after the health report. Do not create files, edit files, install dependencies, or run commands that change project state.
 
 ## Template Use
 
@@ -57,8 +62,10 @@ Use templates as structure, not as text to copy blindly. Fill unknown items with
 Template files:
 - `templates/AGENTS.md`
 - `templates/project-analysis.md`
+- `templates/contract.md`
 - `templates/roadmap.md`
 - `templates/progress.md`
+- `templates/trace.md`
 - `templates/loop.md`
 - `templates/verification.md`
 
@@ -129,6 +136,21 @@ Use scoring to choose the next task when more than one safe task is available:
 
 Pick the best-scored high-priority task. If scores are missing, infer them before selecting a task and update `roadmap.md` when editing is allowed.
 
+### `contract.md`
+
+Define the current task contract before implementation. Include:
+- task ID and title;
+- planner notes;
+- builder scope;
+- evaluator checklist;
+- files allowed to change;
+- explicit out-of-scope items;
+- done criteria;
+- required verification;
+- rollback or restart signals.
+
+Do not start implementation until the contract is concrete enough to evaluate.
+
 ### `progress.md`
 
 Append entries. Do not erase history.
@@ -141,7 +163,21 @@ Each entry should include:
 - checks run;
 - result;
 - next step;
+- bottleneck;
 - handoff note.
+
+### `trace.md`
+
+Append trace entries when verification fails, judgment diverges, or the loop restarts. Include:
+- date;
+- task ID;
+- symptom;
+- expected behavior;
+- actual behavior;
+- divergence point;
+- evidence;
+- decision;
+- next action.
 
 ### `loop.md`
 
@@ -149,17 +185,21 @@ Describe the operating loop:
 
 1. Read `AGENTS.md`.
 2. Read `project-analysis.md`.
-3. Read `roadmap.md`.
-4. Read `progress.md`.
-5. Read `verification.md`.
-6. Score unfinished tasks by impact, risk, effort, and confidence.
-7. Pick the best-scored high-priority safe task.
-8. Implement the smallest useful change.
-9. Run the narrowest verification that proves the task.
-10. Fix failures if they are in scope.
-11. Update `progress.md` with a handoff note.
-12. Mark the task done only if verification passes or the task is documentation-only and manually reviewed.
-13. Report the result and next task.
+3. Read `contract.md`.
+4. Read `roadmap.md`.
+5. Read `progress.md`.
+6. Read `trace.md`.
+7. Read `verification.md`.
+8. Score unfinished tasks by impact, risk, effort, and confidence.
+9. Pick the best-scored high-priority safe task.
+10. Refresh `contract.md` for that task.
+11. Implement the smallest useful change.
+12. Run the narrowest verification that proves the task.
+13. Fix failures if they are in scope.
+14. If the same failure repeats or the contract is wrong, write `trace.md` and use the restart policy.
+15. Update `progress.md` with bottleneck and handoff notes.
+16. Mark the task done only if verification passes or the task is documentation-only and manually reviewed.
+17. Report the result and next task.
 
 ### `verification.md`
 
@@ -187,14 +227,71 @@ In `doctor` mode, inspect and report:
 - required Loop files: present, readable, and not only generic placeholders;
 - `AGENTS.md`: project-specific rules exist and do not conflict with nested instructions;
 - `project-analysis.md`: stack, commands, risks, and recommended work are current enough;
+- `contract.md`: current task has concrete done criteria, allowed files, and verification;
 - `roadmap.md`: tasks are small, checkable, prioritized, and include scoring fields;
 - completed roadmap items: each done item has matching progress evidence and verification;
-- `progress.md`: latest entry includes checks, result, next step, and handoff;
+- `progress.md`: latest entry includes checks, result, next step, bottleneck, and handoff;
+- `trace.md`: repeated failures, restarts, and evaluator divergences are recorded;
 - `verification.md`: package manager detection, commands, manual checks, and matrix match the current repo;
 - stale commands: scripts referenced in docs still exist in project config;
+- harness weight: obsolete Loop files, stale instructions, or redundant process steps are identified for removal;
 - safety: no instruction asks to expose secrets, delete important files, deploy, or publish without approval.
 
 Report each item as `pass`, `warn`, or `fail`, then recommend one next mode: `repair`, `matrix`, `continue`, or `setup`.
+
+## Restart Policy
+
+Restart the loop instead of endlessly patching when:
+- verification fails twice for the same underlying reason;
+- the implementation no longer matches `contract.md`;
+- the selected task is larger than one safe loop;
+- fixes require changing out-of-scope files;
+- the evaluator cannot prove done with available checks.
+
+When restarting:
+1. Stop editing application code.
+2. Append a `trace.md` entry with the divergence point and evidence.
+3. Update `progress.md` with the current bottleneck.
+4. Shrink or rewrite the task contract.
+5. Resume only with a smaller task or a corrected contract.
+
+## Trace Reading
+
+Use `trace.md` like a stack trace for agent behavior. When something goes wrong, identify the exact moment where judgment diverged from the contract:
+- wrong task selected;
+- unclear done criteria;
+- missing verification command;
+- build or test failure;
+- user-facing behavior mismatch;
+- overgrown harness or stale instruction.
+
+Do not tune by vibe. Tune by the trace evidence.
+
+## Bottleneck Detection
+
+At the end of each loop, name the current bottleneck in `progress.md`:
+- planning;
+- contract;
+- implementation;
+- verification;
+- documentation;
+- architecture;
+- UX;
+- release;
+- harness.
+
+The next task should make the current bottleneck smaller or more visible.
+
+## Harness Pruning
+
+The loop exists to help the model, not to become permanent overhead. In `doctor` and `repair`, look for harness that can be simplified:
+- unused generated files;
+- duplicated instructions;
+- stale verification commands;
+- over-specific rules from old failures;
+- process steps that no longer improve correctness.
+
+Do not delete project files automatically. Recommend pruning, or edit only workflow docs when the user requested `repair`.
 
 ## Verification Matrix
 
@@ -261,9 +358,12 @@ Status:
 | Required files | pass/warn/fail |  |  |
 | Project rules | pass/warn/fail |  |  |
 | Project analysis | pass/warn/fail |  |  |
+| Contract quality | pass/warn/fail |  |  |
 | Roadmap quality | pass/warn/fail |  |  |
 | Progress evidence | pass/warn/fail |  |  |
+| Trace quality | pass/warn/fail |  |  |
 | Verification matrix | pass/warn/fail |  |  |
+| Harness weight | pass/warn/fail |  |  |
 | Safety | pass/warn/fail |  |  |
 
 Next mode:
@@ -309,6 +409,7 @@ Completed:
 Checks:
 Errors:
 Fixed:
+Bottleneck:
 Next task:
 Recommendations:
 ```

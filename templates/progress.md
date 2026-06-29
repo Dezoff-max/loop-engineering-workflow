@@ -9,6 +9,7 @@ Append-only history. Do not erase previous entries.
 - Checks run:
 - Result:
 - Next step:
+- Bottleneck:
 - Handoff:
 
 ## Handoff
@@ -18,3 +19,4 @@ Append-only history. Do not erase previous entries.
 - Known blockers:
 - Commands that passed:
 - Commands that failed:
+- Current bottleneck:
