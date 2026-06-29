@@ -2,7 +2,7 @@
 
 All notable changes to Loop Engineering Workflow will be documented in this file.
 
-## Unreleased
+## 0.3.0 - 2026-06-29
 
 - Added `contract.md` and `trace.md` templates for explicit task contracts and restart traces.
 - Added planner, builder, and evaluator role separation to the loop instructions.
